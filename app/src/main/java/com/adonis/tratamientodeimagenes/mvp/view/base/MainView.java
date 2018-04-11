@@ -41,9 +41,9 @@ public class MainView extends ActivityView<MainActivity, Void, Void>  implements
 
     public void setRedChannel(){
         float[] src = new float[]{
-                1, 0, 0, 0, 0,
+                255, 0, 0, 0, 0,
                 0, 1, 0, 0, 0,
-                0, 0, 255, 0, 0,
+                0, 0, 1, 0, 0,
                 0, 0, 0, 1, 0};
 
         ColorMatrix colorMatrix = new ColorMatrix();
