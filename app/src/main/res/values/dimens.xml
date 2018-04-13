@@ -3,5 +3,8 @@
 
     <dimen name="floating_button_size">50dp</dimen>
     <dimen name="generic_margin_size">16dp</dimen>
+    <dimen name="generic_one">1dp</dimen>
+    <dimen name="accessory_size">200dp</dimen>
+    <dimen name="accessory_item_size">60dp</dimen>
 
 </resources>

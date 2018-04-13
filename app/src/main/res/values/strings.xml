@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">TratamientoDeImagenes</string>
+    <string name="app_name">Fun Images</string>
+
+    <integer name="animation_time">1000</integer>
 </resources>

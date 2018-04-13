@@ -20,7 +20,6 @@ public class MainActivity extends BaseActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         createPresenter();
-        view.init();
     }
 
     @Override
@@ -30,4 +29,9 @@ public class MainActivity extends BaseActivity  {
         presenter = new MainPresenter(view);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        view.init();
+    }
 }

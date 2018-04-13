@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parentView"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context="com.adonis.tratamientodeimagenes.activity.MainActivity">
 
     <ImageView
@@ -13,14 +15,37 @@
         android:src="@drawable/img_1"
         android:scaleType="fitXY"/>
 
+    <View
+        android:id="@+id/refView"
+        android:layout_width="@dimen/generic_one"
+        android:layout_height="@dimen/generic_one"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fabApplyFilter"
         android:layout_width="@dimen/floating_button_size"
         android:layout_height="@dimen/floating_button_size"
         android:layout_margin="@dimen/generic_margin_size"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@+id/refView"
         android:src="@drawable/ic_recent_actors_white_24px"/>
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/addAccessory"
+        android:layout_width="@dimen/floating_button_size"
+        android:layout_height="@dimen/floating_button_size"
+        android:layout_margin="@dimen/generic_margin_size"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/refView"
+        android:src="@drawable/ic_add_white_24px" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listOfAccessories"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/accessory_size"
+        android:layout_alignParentBottom="true"
+        android:background="@color/whiteAlpha40"
+        android:visibility="gone"/>
 
 </RelativeLayout>
