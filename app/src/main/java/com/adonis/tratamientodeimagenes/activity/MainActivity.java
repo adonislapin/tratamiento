@@ -6,7 +6,7 @@ import android.support.design.widget.FloatingActionButton;
 import com.adonis.tratamientodeimagenes.R;
 import com.adonis.tratamientodeimagenes.activity.base.BaseActivity;
 import com.adonis.tratamientodeimagenes.mvp.presenter.MainPresenter;
-import com.adonis.tratamientodeimagenes.mvp.view.base.MainView;
+import com.adonis.tratamientodeimagenes.mvp.view.MainView;
 
 import butterknife.ButterKnife;
 

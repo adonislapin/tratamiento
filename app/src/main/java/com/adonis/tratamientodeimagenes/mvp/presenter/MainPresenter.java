@@ -2,7 +2,7 @@ package com.adonis.tratamientodeimagenes.mvp.presenter;
 
 import android.support.annotation.NonNull;
 
-import com.adonis.tratamientodeimagenes.mvp.view.base.MainView;
+import com.adonis.tratamientodeimagenes.mvp.view.MainView;
 
 public class MainPresenter {
 

@@ -1,5 +1,6 @@
-package com.adonis.tratamientodeimagenes.mvp.view.base;
+package com.adonis.tratamientodeimagenes.mvp.view;
 
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.support.design.widget.FloatingActionButton;
@@ -7,15 +8,14 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.adonis.tratamientodeimagenes.R;
 import com.adonis.tratamientodeimagenes.activity.MainActivity;
 import com.adonis.tratamientodeimagenes.adapters.AccessoryAdapter;
-import com.adonis.tratamientodeimagenes.mvp.view.IClickInterface;
+import com.adonis.tratamientodeimagenes.customviews.StickerImageView;
+import com.adonis.tratamientodeimagenes.mvp.view.base.ActivityView;
 
 import java.util.ArrayList;
 
@@ -34,6 +34,7 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
     private View referenceView;
     private AccessoryAdapter accessoryAdapter;
     private RelativeLayout parentView;
+    private RelativeLayout setOfAccessories;
 
     private ArrayList<Object> accessories = new ArrayList<>();
 
@@ -89,53 +90,11 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
 
         addAccessory.setLayoutParams(params);
 
-        Animation animationIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
-        Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_bottom);
-
-        filterBtn.startAnimation(animationIn);
-        filterBtn.setVisibility(View.VISIBLE);
-
-        listOfAccessories.startAnimation(animationOut);
-        animationOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                listOfAccessories.setVisibility(View.GONE);
-                addAccessory.setImageResource(R.drawable.ic_add_white_24px);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
+        listOfAccessories.setVisibility(View.GONE);
     }
 
     private void handleAddAccessoryBtn() {
-        Animation animationIn = AnimationUtils.loadAnimation(getContext(), R.anim.slide_in_bottom);
-        Animation animationOut = AnimationUtils.loadAnimation(getContext(), R.anim.slide_out_bottom);
-
         listOfAccessories.setVisibility(View.VISIBLE);
-        listOfAccessories.startAnimation(animationIn);
-        filterBtn.startAnimation(animationOut);
-
-        animationOut.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                filterBtn.setVisibility(View.GONE);
-                addAccessory.setImageResource(R.drawable.ic_clear_white_24px);
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-            }
-        });
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) addAccessory.getLayoutParams();
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, 1);
@@ -151,6 +110,7 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
         addAccessory = getActivity().findViewById(R.id.addAccessory);
         referenceView = getActivity().findViewById(R.id.refView);
         parentView = getActivity().findViewById(R.id.parentView);
+        setOfAccessories = getActivity().findViewById(R.id.setOfAccessories);
 
         filterBtn.setOnClickListener(this);
         addAccessory.setOnClickListener(this);
@@ -158,9 +118,6 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
         accessoryAdapter = new AccessoryAdapter(getActivity(), loadAccessories(), this);
         listOfAccessories.setAdapter(accessoryAdapter);
         listOfAccessories.setLayoutManager(new GridLayoutManager(getContext(), 3));
-
-        windowwidth = getActivity().getWindowManager().getDefaultDisplay().getWidth();
-        windowheight = getActivity().getWindowManager().getDefaultDisplay().getHeight();
     }
 
     private int[] loadAccessories() {
@@ -176,18 +133,23 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
         return accessories;
     }
 
-    public void applyBlurUsingGlide() {
-    }
-
     @Override
     public void onClickItem(int resource) {
-        ImageView imageView = new ImageView(getActivity());
-        imageView.setImageResource(resource);
-        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-        imageView.setOnTouchListener(onTouchListener());
-
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(200, 200);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                200,
+                200);
         params.addRule(RelativeLayout.CENTER_IN_PARENT, 1);
+/*
+        ImageView touchImage = new ImageView(getContext());
+        touchImage.setImageResource(resource);
+        touchImage.setOnTouchListener(onTouchListener());
+
+
+        touchImage.setLayoutParams(params);
+
+*/
+        StickerImageView imageView = new StickerImageView(getContext());
+        imageView.setImageResource(resource);
         imageView.setLayoutParams(params);
 
         parentView.addView(imageView);
@@ -195,36 +157,82 @@ public class MainView extends ActivityView<MainActivity, Void, Void> implements 
         restoreActionButtons();
     }
 
+    private int _xDelta;
+    private int _yDelta;
+
     private View.OnTouchListener onTouchListener() {
         return new View.OnTouchListener() {
 
-            public boolean onTouch(View view, MotionEvent event) {
-                switch(event.getAction()) {
-                    case MotionEvent.ACTION_DOWN: {
-                        x = event.getX();
-                        y = event.getY();
-                        dx = x - view.getX();
-                        dy = y - view.getY();
-                    }
-                    break;
-                    case MotionEvent.ACTION_MOVE: {
-                        view.setX(event.getX() - dx);
-                        view.setY(event.getY() - dy);
-                    }
-                    break;
-                    case MotionEvent.ACTION_UP: {
-                        //your stuff
-                    }
+            public boolean onTouch(View vi, MotionEvent event) {
+                final int X = (int) event.getRawX();
+                final int Y = (int) event.getRawY();
+                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                    case MotionEvent.ACTION_DOWN:
+                        RelativeLayout.LayoutParams lParams = (RelativeLayout.LayoutParams) vi.getLayoutParams();
+                        _xDelta = X - lParams.leftMargin;
+                        _yDelta = Y - lParams.topMargin;
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        break;
+                    case MotionEvent.ACTION_POINTER_UP:
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) vi.getLayoutParams();
+                        layoutParams.leftMargin = X - _xDelta;
+                        layoutParams.topMargin = Y - _yDelta;
+                        layoutParams.rightMargin = -250;
+                        layoutParams.bottomMargin = -250;
+                        vi.setLayoutParams(layoutParams);
+                        break;
                 }
-                    return true;
+                parentView.invalidate();
+                return true;
             }
         };
     }
 
-    int windowwidth;
-    int windowheight;
-    float x, y, dx, dy;
+    private View.OnTouchListener getScaleListener(){
+        return new View.OnTouchListener() {
+            float centerX, centerY, startR, startScale, startX, startY;
 
-    private RelativeLayout.LayoutParams layoutParams;
+            @Override
+            public boolean onTouch(View v, MotionEvent e) {
+                if (e.getAction() == MotionEvent.ACTION_DOWN) {
+
+                    // calculate center of image
+                    centerX = (v.getLeft() + v.getRight()) / 2f;
+                    centerY = (v.getTop() + v.getBottom()) / 2f;
+
+                    // recalculate coordinates of starting point
+                    startX = e.getRawX() - v.getX() + centerX;
+                    startY = e.getRawY() - v.getY() + centerY;
+
+                    // get starting distance and scale
+                    startR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+                    startScale = v.getScaleX();
+
+                } else if (e.getAction() == MotionEvent.ACTION_MOVE) {
+
+                    // calculate new distance
+                    float newR = (float) Math.hypot(e.getRawX() - startX, e.getRawY() - startY);
+
+                    // set new scale
+                    float newScale = newR / startR * startScale;
+                    v.setScaleX(newScale);
+                    v.setScaleY(newScale);
+
+                    // move handler image
+                    v.setX(centerX + v.getWidth()/2f * newScale);
+                    v.setY(centerY + v.getHeight()/2f * newScale);
+
+                } else if (e.getAction() == MotionEvent.ACTION_UP) {
+
+                }
+                return true;
+            }
+        };
+    }
 
 }

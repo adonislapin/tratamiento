@@ -15,6 +15,11 @@
         android:src="@drawable/img_1"
         android:scaleType="fitXY"/>
 
+    <RelativeLayout
+        android:id="@+id/setOfAccessories"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <View
         android:id="@+id/refView"
         android:layout_width="@dimen/generic_one"
